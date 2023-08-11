@@ -5,7 +5,7 @@
 defaults:
   # Default instance type for all jobs
   resources:
-    instance-type: P5000
+    instance-type: P4000
 jobs:
   CloneRepo:
     outputs:
