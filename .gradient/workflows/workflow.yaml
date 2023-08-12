@@ -11,6 +11,7 @@ defaults:
     # Provide secrets
     UPLOAD_URL_BASE: secret:UPLOAD_URL_BASE
     UPLOAD_KEY: secret:UPLOAD_KEY
+    DATA_SET: tinyshakespeare
 jobs:
   CloneRepo:
     outputs:
@@ -35,12 +36,12 @@ jobs:
         set -e
         mkdir -p /outputs/model
         cd /inputs/repo
-        python tinyshakespeare.py download
-        python tinyshakespeare.py pretokenize
-        python train.py --dataset=tinyshakespeare --max_iters=100 --eval_iters=10 --eval_interval=10 --warmup_iters=10 --dtype=float16 --compile=False --always_save_checkpoint=True
+        python "${DATA_SET}.py" download
+        python "${DATA_SET}.py" pretokenize
+        python train.py --dataset=${DATA_SET} --max_iters=10000 --dtype=float16 --compile=False --always_save_checkpoint=True
 
         mv out/ckpt.pt /outputs/model/ckpt.pt
-        mv out/model.bin /outputs/model/tinyshakespeare-15M.bin
-        mv data/tinyshakespeare.bin /outputs/model/tinyshakespeare-tokens.bin
+        mv out/model.bin "/outputs/model/${DATA_SET}-15M.bin"
+        mv "data/${DATA_SET}.bin" "/outputs/model/${DATA_SET}-tokens.bin"
       image: paperspace/gradient-base:pt112-tf29-jax0314-py39-20220803
 
