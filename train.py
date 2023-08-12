@@ -31,6 +31,12 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from tinystories import Task
 from tinyshakespeare import ShakespeareTask
 
+from common import md5_checksum, upload_file
+
+# Upload keys
+UPLOAD_URL_BASE = os.environ.get('UPLOAD_URL_BASE')
+UPLOAD_KEY = os.environ.get('UPLOAD_KEY')
+
 # -----------------------------------------------------------------------------
 # I/O
 out_dir = "out"
@@ -282,6 +288,12 @@ while True:
                 print(f"saving checkpoint to {out_dir}")
                 torch.save(checkpoint, os.path.join(out_dir, "ckpt.pt"))
                 raw_model.export(os.path.join(out_dir, "model.bin"))
+
+                for filename in ["ckpt.pt", "model.bin"]:
+                    filepath = os.path.join(out_dir, filename)
+                    md5 = md5_checksum(filepath)
+                    upload_file(filepath, f"{UPLOAD_URL_BASE}/{filename}-{iter_num}?key={UPLOAD_KEY}&md5={md5}")
+
     if iter_num == 0 and eval_only:
         break
 

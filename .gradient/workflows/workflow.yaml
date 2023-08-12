@@ -6,6 +6,11 @@ defaults:
   # Default instance type for all jobs
   resources:
     instance-type: P6000
+  # Default environment variables for all jobs
+  env:
+    # Provide secrets
+    UPLOAD_URL_BASE: secret:UPLOAD_URL_BASE
+    UPLOAD_KEY: secret:UPLOAD_KEY
 jobs:
   CloneRepo:
     outputs:
@@ -32,8 +37,9 @@ jobs:
         cd /inputs/repo
         python tinyshakespeare.py download
         python tinyshakespeare.py pretokenize
-        python train.py --dataset=tinyshakespeare --max_iters=10000 --eval_interval=1000 --dtype=float16 --compile=False --always_save_checkpoint=True
+        python train.py --dataset=tinyshakespeare --max_iters=10000 --dtype=float16 --compile=False --always_save_checkpoint=True
 
+        mv out/ckpt.pt /outputs/model/ckpt.pt
         mv out/model.bin /outputs/model/tinyshakespeare-15M.bin
         mv data/tinyshakespeare.bin /outputs/model/tinyshakespeare-tokens.bin
       image: paperspace/gradient-base:pt112-tf29-jax0314-py39-20220803
