@@ -37,7 +37,7 @@ jobs:
         cd /inputs/repo
         python tinyshakespeare.py download
         python tinyshakespeare.py pretokenize
-        python train.py --dataset=tinyshakespeare --max_iters=10000 --dtype=float16 --compile=False --always_save_checkpoint=True
+        python train.py --dataset=tinyshakespeare --max_iters=100 --eval_iters=10 --eval_interval=10 --warmup_iters=10 --dtype=float16 --compile=False --always_save_checkpoint=True
 
         mv out/ckpt.pt /outputs/model/ckpt.pt
         mv out/model.bin /outputs/model/tinyshakespeare-15M.bin
