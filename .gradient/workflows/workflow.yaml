@@ -44,8 +44,7 @@ jobs:
         #python "${DATA_SET}.py" download
         #python "${DATA_SET}.py" pretokenize
 
-        mkdir -p data
-        curl -f "${KAZKY_DOWNLOAD_URL}" -o "data/${DATA_SET}.bin"
+        mkdir -p data && curl -f "${KAZKY_DOWNLOAD_URL}" -o "data/${DATA_SET}.bin"
 
         python train.py --dataset=${DATA_SET} --max_iters=10000 --dtype=float16 --compile=True --always_save_checkpoint=True
 
