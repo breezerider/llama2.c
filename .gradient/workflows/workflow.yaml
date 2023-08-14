@@ -5,7 +5,7 @@
 defaults:
   # Default instance type for all jobs
   resources:
-    instance-type: P6000
+    instance-type: A4000
   # Default environment variables for all jobs
   env:
     # Provide secrets
@@ -46,7 +46,7 @@ jobs:
 
         mkdir -p data && curl -f "${KAZKY_DOWNLOAD_URL}" -o "data/${DATA_SET}.bin"
 
-        python train.py --dataset=${DATA_SET} --max_iters=10000 --dtype=float16 --compile=True --always_save_checkpoint=True
+        python train.py --dataset=${DATA_SET} --max_iters=10000 --dtype=bfloat16 --compile=True --always_save_checkpoint=True
 
         mv out/ckpt.pt /outputs/model/ckpt.pt
         mv out/model.bin "/outputs/model/${DATA_SET}-15M.bin"
