@@ -9,6 +9,7 @@ import os
 import random
 from typing import List
 from concurrent.futures import ProcessPoolExecutor
+from tqdm import tqdm
 
 import numpy as np
 import torch
