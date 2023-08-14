@@ -11,7 +11,8 @@ defaults:
     # Provide secrets
     UPLOAD_URL_BASE: secret:UPLOAD_URL_BASE
     UPLOAD_KEY: secret:UPLOAD_KEY
-    DATA_SET: tinyshakespeare
+    KAZKY_DOWNLOAD_URL: secret:KAZKY_DOWNLOAD_URL
+    DATA_SET: tinykazky
 jobs:
   CloneRepo:
     outputs:
@@ -39,12 +40,17 @@ jobs:
 
         mkdir -p /outputs/model
         cd /inputs/repo
-        python "${DATA_SET}.py" download
-        python "${DATA_SET}.py" pretokenize
-        python train.py --dataset=${DATA_SET} --max_iters=10000 --dtype=float16 --compile=False --always_save_checkpoint=True
+
+        #python "${DATA_SET}.py" download
+        #python "${DATA_SET}.py" pretokenize
+
+        mkdir -p data
+        curl -f "${KAZKY_DOWNLOAD_URL}" -o "data/${DATA_SET}.bin"
+
+        python train.py --dataset=${DATA_SET} --max_iters=10000 --dtype=float16 --compile=True --always_save_checkpoint=True
 
         mv out/ckpt.pt /outputs/model/ckpt.pt
         mv out/model.bin "/outputs/model/${DATA_SET}-15M.bin"
         mv "data/${DATA_SET}.bin" "/outputs/model/${DATA_SET}-tokens.bin"
-      image: paperspace/gradient-base:pt112-tf29-jax0314-py39-20220803
+      image: breezerider/gradient-base:nlp-pt201-py311
 

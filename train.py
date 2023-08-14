@@ -30,6 +30,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 
 from tinystories import Task
 from tinyshakespeare import ShakespeareTask
+from tinykazky import KazkyTask
 
 from common import md5_checksum, upload_file
 
@@ -53,7 +54,7 @@ wandb_run_name = "run" + datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 # data
 batch_size = 128  # if gradient_accumulation_steps > 1, this is the micro-batch size
 max_seq_len = 256
-dataset = "tinystories"  # tinystories|tinyshakespeare
+dataset = "tinystories"  # tinystories|tinyshakespeare|tinykazky
 # model
 dim = 288
 n_layers = 6
@@ -129,7 +130,7 @@ ctx = (
 )
 
 # task-specific setup
-task = {'tinystories': Task, 'tinyshakespeare': ShakespeareTask}[dataset]
+task = {'tinystories': Task, 'tinyshakespeare': ShakespeareTask, 'tinykazky': KazkyTask}[dataset]
 iter_batches = partial(
     task.iter_batches,
     batch_size=batch_size,
