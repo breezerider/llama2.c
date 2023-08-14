@@ -52,5 +52,5 @@ jobs:
         mv out/ckpt.pt /outputs/model/ckpt.pt
         mv out/model.bin "/outputs/model/${DATA_SET}-15M.bin"
         mv "data/${DATA_SET}.bin" "/outputs/model/${DATA_SET}-tokens.bin"
-      image: breezerider/gradient-base:nlp-pt210-py311
+      image: breezerider/gradient-base:nlp-pt201-py310
 
